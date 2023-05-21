@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Actors, Movies, MovieInfo, Profile, Navbar} from './components';
+import { Actors, Movies, MoviesInfo, Profile, Navbar} from './index';
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
       <Routes>
           <Route exact path="/" element={<Movies />} />
           <Route exact path="/approved" element={<Movies />} />
-          <Route exact path="/movie/:id" element={<MovieInfo />} />
+          <Route exact path="/movie/:id" element={<MoviesInfo />} />
           <Route exact path="/actors/:id" element={<Actors />} />
           <Route exact path="/profile/:id" element={<Profile />} />
       </Routes>
