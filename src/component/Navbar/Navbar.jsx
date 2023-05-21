@@ -14,12 +14,12 @@ import {
   DrawerContent,
   Text,
   useDisclosure,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuList,
+
   useColorMode,
+  DrawerOverlay,
+  DrawerCloseButton,
+  DrawerHeader,
+  DrawerBody,
 } from '@chakra-ui/react';
 
 import {
@@ -32,7 +32,6 @@ import {
   FiMoon
 } from 'react-icons/fi';
 
-
 const LinkItems = [
   { name: 'Home', icon: FiHome },
   { name: 'Categories', icon: FiTrendingUp },
@@ -40,7 +39,7 @@ const LinkItems = [
   { name: 'Favorites', icon: FiStar },
 ];
 
-const Navbar = () => {
+const Navbar = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const bg = useColorModeValue('gray.100', 'gray.900');
 
@@ -55,6 +54,7 @@ const Navbar = () => {
       {/* mobilenav */}
       <MobileNav onOpen={onOpen} />
       <Box ml={{ base: 0, md: 60 }} p="4">
+        {children}
         {/* Content */}
       </Box>
     </Box>
@@ -65,7 +65,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
   const bgBox = useColorModeValue('white', 'gray.900');
 
   return (
-    <Box transition="3s ease" bg={bgBox} borderRight="1px" borderRightColor={useColorModeValue('gray.200', 'gray.700')} w={{ base: 'full', md: 60 }} pos="fixed" h="full" >
+    <Box transition="3s ease" bg={bgBox} borderRight="1px" borderRightColor={useColorModeValue('gray.200', 'gray.700')} w={{ base: 'full', md: 60 }} pos="fixed" h="full" {...rest}>
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="4xl" fontFamily="Bebas Neue" textAlign="center" color="red.400">
           CINEVERSE
@@ -83,11 +83,11 @@ const SidebarContent = ({ onClose, ...rest }) => {
   );
 };
 
-const NavItem = ({ icon, children }) => {
+const NavItem = ({ icon, children, ...rest }) => {
   return (
-    <Link  style={{ textDecoration: 'none' }}>
+    <Link style={{ textDecoration: 'none' }}>
       <Flex align="center" p="4"  mx="4" borderRadius="lg" role="group" cursor="pointer"
-        _hover={{ bg: 'red.400', color: 'white',}}>
+        _hover={{ bg: 'red.400', color: 'white',}} {...rest}>
         {icon && (
           <Icon mr="4" fontSize="16" _groupHover={{ color: 'white'}} as={icon} />
         )}
@@ -99,49 +99,81 @@ const NavItem = ({ icon, children }) => {
   );
 };
 
-const MobileNav = ({ onOpen }) => {
+const MobileNav = ( ...rest) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const borderColor = useColorModeValue('gray.200', 'gray.700');
   const bg = useColorModeValue('white', 'gray.900');
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const btnRef = React.useRef();
+  
   return (
-    <Flex ml={{ base: 0, md: 60 }} px={{ base: 4, md: 4 }} height="20" alignItems="center" bg={bg} borderBottomWidth="1px"  borderBottomColor={borderColor} justifyContent={{ base: 'space-between', md: 'flex-end' }}>
-{/* Menu on mobile mode */}
-      <IconButton display={{ base: 'flex', md: 'none' }} onClick={onOpen}  variant="outline" aria-label="open menu" 
-      icon={<FiMenu />} />
+    <Flex
+      ml={{ base: 0, md: 60 }}
+      px={{ base: 4, md: 4 }}
+      height="20"
+      alignItems="center"
+      bg={bg}
+      borderBottomWidth="1px"
+      borderBottomColor={borderColor}
+      justifyContent={{ base: 'space-between', md: 'flex-end' }}
+      {...rest}
+    >
+      {/* Menu on mobile mode */}
+      <IconButton
+        display={{ base: 'flex', md: 'none' }}
+        onClick={onOpen}
+        variant="outline"
+        aria-label="open menu"
+        icon={<FiMenu />}
+      />
 
-      <Text display={{ base: 'flex', md: 'none' }} fontSize="4xl" fontFamily="Bebas Neue" textAlign="center" color="red.400">
+      <Text
+        display={{ base: 'flex', md: 'none' }}
+        fontSize="4xl"
+        fontFamily="Bebas Neue"
+        textAlign="center"
+        color="red.400"
+      >
         CINEVERSE
       </Text>
 
       <HStack spacing={{ base: '0', md: '6' }}>
-        <IconButton size="lg" aria-label="Toggle Color Mode" onClick={toggleColorMode}
-        icon={colorMode === 'light' ? <FiMoon /> : <FiSun />}
+        <IconButton
+          size="sm"
+          aria-label="Toggle Color Mode"
+          onClick={toggleColorMode}
+          icon={colorMode === 'light' ? <FiMoon /> : <FiSun />}
         />
 
-{/* Avatar Section and Profile Sign out menu */}
+        {/* Avatar Section */}
+        <Avatar bg="teal.500" />
 
-        <Flex alignItems="center">
-          <Menu>
-            <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }} >
-              <HStack>
-                <Avatar bg="teal.500" />
-                <VStack display={{ base: 'none', md: 'flex' }} alignItems="flex-start" spacing="1px" ml="2">
-                  <Text fontSize="sm">Justina Clark</Text>
-                </VStack>
-                
-              </HStack>
-            </MenuButton>
-            <MenuList bg={bg} borderColor={borderColor}>
-              <MenuItem>Profile</MenuItem>
-              <MenuDivider />
-              <MenuItem>Sign out</MenuItem>
-            </MenuList>
-          </Menu>
-        </Flex>
+        {/* Drawer */}
+        <Drawer
+          placement="left"
+          onClose={onClose}
+          isOpen={isOpen}
+          finalFocusRef={btnRef}
+        >
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerHeader>Menu</DrawerHeader>
+            <DrawerBody>
+              <VStack spacing={2} align="start">
+                {LinkItems.map((link) => (
+                  <NavItem key={link.name} icon={link.icon}>
+                    {link.name}
+                  </NavItem>
+                ))}
+              </VStack>
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
       </HStack>
     </Flex>
   );
 };
+
 
 export default Navbar;
