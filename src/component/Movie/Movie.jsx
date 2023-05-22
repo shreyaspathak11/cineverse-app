@@ -1,9 +1,15 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-const Movie = ({Movie, i }) => {
-    console.log(Movie,i)
+const Movie = ({movie, i }) => {
+    console.log(movie,i)
   return (
-    <div>Movie</div>
+    <div>
+        <h1>
+        {i}
+    {movie.title}
+        </h1>
+    </div>
   )
 }
 

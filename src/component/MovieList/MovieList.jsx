@@ -1,9 +1,10 @@
 import React from 'react'
+import { Movie } from '..'
 
-const MovieList = ({movie}) => {
+const MovieList = ({ movies }) => {
   return (
     <>
-        {movie.result.map((movie,i) => (
+        {movies.results.map((movie,i) => (
             <Movie key={i} movie={movie} i={i} />
         ))}
     </>

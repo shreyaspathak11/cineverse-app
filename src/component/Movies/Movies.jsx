@@ -1,15 +1,27 @@
 import React, {useState, useEffect } from 'react'
 import { useSelector } from 'react-redux' 
 import { useGetMoviesQuery } from '../../services/TMDB'
-import MovieList from '..'
+import { MovieList } from '..'
 
 const Movies = () => {
-  const { data } = useGetMoviesQuery()
+  const { data,error, isFetching } = useGetMoviesQuery()
 
-  console.log(data)
+  if (isFetching) {
+    return <span>Loading...</span>
+  }
+
+  if (!data.results.length){
+    <span>No movies found</span>  
+
+  }
+  if (error) {
+    return <span>Oops, something went wrong!</span>
+    
+  }
+
   return ( 
     <div>
-      <MovieList movie={data} />
+      <MovieList movies={data} />
     </div>
   )
 }
