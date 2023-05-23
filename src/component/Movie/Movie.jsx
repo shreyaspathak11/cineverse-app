@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+
 
 const Movie = ({movie, i }) => {
     console.log(movie,i)
