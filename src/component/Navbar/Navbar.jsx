@@ -1,8 +1,10 @@
 import React from 'react';
-import { Box, Flex, IconButton, Text, useColorModeValue } from '@chakra-ui/react';
-import { FiMenu } from 'react-icons/fi';
+import { Avatar, Box, Flex, HStack, IconButton, Spacer, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { FiMenu, FiMoon, FiSun } from 'react-icons/fi';
 
 const Navbar = ({ onOpen }) => {
+  const { colorMode, toggleColorMode } = useColorMode();
+
   return (
     <Flex
       align="center"
@@ -19,9 +21,18 @@ const Navbar = ({ onOpen }) => {
         aria-label="Open Sidebar"
         onClick={onOpen}
       />
-      <Text fontSize="2xl" fontWeight="bold">
-        Logo
-      </Text>
+    <Spacer />
+      <HStack spacing={{ base: '0', md: '6' }} >
+        <IconButton
+          size="sm"
+          aria-label="Toggle Color Mode"
+          onClick={toggleColorMode}
+          icon={colorMode === 'light' ? <FiMoon /> : <FiSun />}
+        />
+
+        {/* Avatar Section */}
+        <Avatar bg="teal.500" />
+      </HStack>
       <Box></Box>
     </Flex>
   );
