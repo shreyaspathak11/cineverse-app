@@ -6,7 +6,7 @@ import {
 } from '@chakra-ui/react';
 
 
-import { MovieList } from '..';
+import { Movie } from '..';
 
 
 import { useGetMoviesQuery } from '../../services/TMDB';
@@ -42,7 +42,7 @@ function Movies() {
 
   return (
     <Box>
-      <MovieList movies={data}  />
+      <Movie movies={data}  />
     </Box>
   );
 }

@@ -6,7 +6,6 @@ function App() {
   return (
     <>
     <Router>
-      <Navbar />
       <Routes>
           <Route exact path="/*" element={<Movies />} />
           <Route exact path="/movie/:id" element={<MoviesInfo />} />
