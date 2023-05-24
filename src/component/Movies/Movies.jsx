@@ -1,29 +1,50 @@
-import React, {useState, useEffect } from 'react'
-import { useSelector } from 'react-redux' 
-import { useGetMoviesQuery } from '../../services/TMDB'
-import { MovieList } from '..'
+import React, { useState } from 'react';
+import {
+  Box,
+  CircularProgress,
+  Text,
+} from '@chakra-ui/react';
 
-const Movies = () => {
-  const { data,error, isFetching } = useGetMoviesQuery()
+
+import { MovieList } from '..';
+
+
+import { useGetMoviesQuery } from '../../services/TMDB';
+
+function Movies() {
+
+  const { data, error, isFetching } = useGetMoviesQuery({
+   
+  });
+
 
   if (isFetching) {
-    return <span>Loading...</span>
+    return (
+      <Box display="flex" justifyContent="center">
+        <CircularProgress size="4rem" />
+      </Box>
+    );
   }
 
-  if (!data.results.length){
-    <span>No movies found</span>  
-
+  if (!data.results.length) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" mt="20px">
+        <Text variant="h4">
+          No movies that match that name.
+          <br />
+          Please search for something else.
+        </Text>
+      </Box>
+    );
   }
-  if (error) {
-    return <span>Oops, something went wrong!</span>
-    
-  }
 
-  return ( 
-    <div>
-      <MovieList movies={data} />
-    </div>
-  )
+  if (error) return 'An error has occurred.';
+
+  return (
+    <Box>
+      <MovieList movies={data}  />
+    </Box>
+  );
 }
 
-export default Movies
+export default Movies;
