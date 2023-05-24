@@ -12,11 +12,16 @@ export const tmdbApi = createApi({
         // Get Movies by TYPE
         getMovies: builder.query({
             query: () => `movie/popular?page=${page}&api_key=3f3165b8553303b1fb97cdda22c7758b`
-            })
+            }),
+            // GET Movies by GENRE
+        getGenres : builder.query({
+            query: () => `genre/movie/list?api_key=${tmdbApiKey}`
+        }),
 
     })
 });
 
 export const { 
     useGetMoviesQuery,
+    useGetGenresQuery
  } = tmdbApi;
