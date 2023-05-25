@@ -11,7 +11,9 @@ export const tmdbApi = createApi({
     endpoints: (builder) => ({
         // Get Movies by TYPE
         getMovies: builder.query({
-            query: () => `movie/popular?page=${page}&api_key=3f3165b8553303b1fb97cdda22c7758b`
+            query: (
+                { genreIdOrCategoryName, page } // Destructure the `genreIdOrCategoryName` and `page` values from the `queryFn`
+            ) => `movie/popular?page=${page}&api_key=3f3165b8553303b1fb97cdda22c7758b`
             }),
             // GET Movies by GENRE
         getGenres : builder.query({

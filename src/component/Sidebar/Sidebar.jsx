@@ -1,9 +1,23 @@
 import React from 'react';
-import { Box, Divider, Flex, Link, Text, VStack, useColorModeValue, Spinner } from '@chakra-ui/react';
+import { Box, Divider, Flex, Text, VStack, useColorModeValue, Spinner, Image, Link  } from '@chakra-ui/react';
 import { useGetGenresQuery } from '../../services/TMDB';
+
+import { useDispatch, useSelector } from 'react-redux';
+
+import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
+import genreIcons from "../../assets/genres";
+
+const categories = [
+  { label: 'Popular', value: 'popular' },
+  { label: 'Top Rated', value: 'top_rated' },
+  { label: 'Upcoming', value: 'upcoming' },
+];
 
 const Sidebar = () => {
   const { data, isFetching } = useGetGenresQuery();
+  const dispatch = useDispatch();
+  const { genreIdOrCategoryName } = useSelector((state) => state.currentGenreOrCategory); 
+ 
 
   return (
     <Box
@@ -15,7 +29,7 @@ const Sidebar = () => {
       position="fixed"
       top="0"
       left="0"
-      overflowY="auto" // Add scrollable feature
+      overflowY="scroll" // Fix typo, should be "scroll" instead of "auto"
     >
       <Flex
         align="center"
@@ -32,10 +46,15 @@ const Sidebar = () => {
         <Text fontWeight="bold" color="gray.400">
           DISCOVER
         </Text>
-        <NavItem>Popular</NavItem>
-        <NavItem>Top Rated</NavItem>
-        <NavItem>Upcoming</NavItem>
-      
+        {categories.map(({ label, value }) => (
+          <Flex w={'100%'} >
+            <NavItem onClick={() => dispatch(selectGenreOrCategory(value))}>
+              <Image src={genreIcons[label.toLowerCase()]} height={30} />
+              <Text>{label}</Text>
+            </NavItem>
+          </Flex>
+        ))}
+
         <Divider my={2} />
         <Text fontWeight="bold" color="gray.400">
           GENRES
@@ -44,30 +63,37 @@ const Sidebar = () => {
         {isFetching ? (
           <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="red.500" size="xl" /> // Loader
         ) : (
-          data.genres.map(({ name, id }) => (
-            <NavItem key={name} onClick={() => {}}>
-              {name}
-            </NavItem>
-          ))
+          <VStack spacing={2} align="start">
+            {data.genres.map(({ name, id }) => (
+              <Flex w={'100%'}> 
+                <NavItem onClick={() => dispatch(selectGenreOrCategory(id))}>
+                  <Image src={genreIcons[name.toLowerCase()]} height={30} />
+                  <Text>{name}</Text>
+                </NavItem>
+              </Flex>
+            ))}
+          </VStack>
         )}
       </VStack>
     </Box>
   );
 };
 
-const NavItem = ({ children }) => {
+const NavItem = ({ children, onClick }) => {
   return (
     <Link
-      href="#"
+
       textDecoration="none"
       _focus={{ boxShadow: 'none' }}
       py={2}
       px={4}
       my={1}
-      borderRadius="md"
+      display="flex" // Set display to "flex"
+      alignItems="center" // Align items vertically in the center
       _hover={{
         bg: useColorModeValue('gray.200', 'gray.700'),
       }}
+      onClick={onClick}
     >
       {children}
     </Link>
