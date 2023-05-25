@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const tmdbApiKey = process.env.TMDB_API_KEY;
+const tmdbApiKey = '3f3165b8553303b1fb97cdda22c7758b' ;
 const page = 1; 
 //https://api.themoviedb.org/3/movie/popular?language=en-US&page=1
 
@@ -10,12 +10,24 @@ export const tmdbApi = createApi({
 
     endpoints: (builder) => ({
         // Get Movies by TYPE
-        getMovies: builder.query({
-            query: (
-                { genreIdOrCategoryName, page } // Destructure the `genreIdOrCategoryName` and `page` values from the `queryFn`
-            ) => `movie/popular?page=${page}&api_key=3f3165b8553303b1fb97cdda22c7758b`
-            }),
-            // GET Movies by GENRE
+              getMovies: builder.query({
+                query: ({ genreIdOrCategoryName, page}) => {
+
+                  // Get Movies by Category
+                  if (genreIdOrCategoryName && typeof genreIdOrCategoryName === 'string') {
+                    return `/movie/${genreIdOrCategoryName}?page=${page}&api_key=${tmdbApiKey}`;
+                  }
+          
+                  // Get Movies by Genre
+                  if (genreIdOrCategoryName && typeof genreIdOrCategoryName === 'number') {
+                    return `discover/movie?with_genres=${genreIdOrCategoryName}&page=${page}&api_key=${tmdbApiKey}`;
+                  }
+          
+                  // Get popular movies by default
+                  return `/movie/popular?page=${page}&api_key=${tmdbApiKey}`;
+                },
+              }),
+
         getGenres : builder.query({
             query: () => `genre/movie/list?api_key=3f3165b8553303b1fb97cdda22c7758b`
         }),
