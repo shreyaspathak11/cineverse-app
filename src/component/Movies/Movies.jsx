@@ -5,8 +5,6 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
-
 import { Movie } from '..';
 import { useSelector } from 'react-redux';
 
