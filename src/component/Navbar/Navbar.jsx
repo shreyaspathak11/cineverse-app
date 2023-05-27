@@ -4,6 +4,7 @@ import { FiMenu, FiMoon, FiSun } from 'react-icons/fi';
 
 const Navbar = ({ onOpen }) => {
   const { colorMode, toggleColorMode } = useColorMode();
+   
 
   return (
     <Flex
